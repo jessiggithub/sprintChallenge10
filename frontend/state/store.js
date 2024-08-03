@@ -8,10 +8,8 @@ export const resetStore = () => configureStore({
     filters: filtersReducer,
     [pizzaApi.reducerPath]: pizzaApi.reducer,
   },
-  middleware: getDefault => getDefault().concat(
-    pizzaApi.middleware,
+  middleware: (getDefaultMiddleware) => 
+    getDefaultMiddleware().concat(pizzaApi.middleware),
+});
 
-  ),
-})
-
-export const store = resetStore
+export const store = resetStore()

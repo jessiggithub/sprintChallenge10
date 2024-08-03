@@ -1,5 +1,5 @@
-import React, { useReducer } from 'react'
-import { useCreateOrderMutation } from '../state/pizzaApi'
+import React, { useReducer } from 'react';
+import { useCreateOrderMutation } from '../state/pizzaApi';
 
 const initialFormState = { // suggested
   fullName: '',
@@ -9,55 +9,45 @@ const initialFormState = { // suggested
   '3': false,
   '4': false,
   '5': false,
-}
+};
 
 const reducer = (state, action) => {
   switch (action.type) {
     case 'CHANGE_INPUT': {
-      const { name, value } = action.payload
-      return {...state, [name]: value };
+      const { name, value } = action.payload;
+      return { ...state, [name]: value };
     }
     case 'RESETR_FORM':
       return initialFormState
    default:
-      return state
+      return state;
   }
 };
 
 export default function PizzaForm() {
-const [form, dispatch] = useReducer(reducer, initialFormState)
-const [createOrder, { isLoading, error }] = useCreateOrderMutation()
+const [form, dispatch] = useReducer(reducer, initialFormState);
+const [createOrder, { isLoading, error }] = useCreateOrderMutation();
 
   const onChange = (e) => {
-    let { name, value, type, checked } = e.target
-    let valueToUse = type === 'checkbox' ? checked : value
-     dispatch({
-       type: 'CHANGE_INPUT',
-       payload: { name, value: valueToUse },
-     })
-   
-   }
+    let { name, value, type, checked } = e.target;
+    let valueToUse = type === 'checkbox' ? checked : value;
+     dispatch({ type: 'CHANGE_INPUT', payload: { name, value: valueToUse } });
+   };
 
   const onSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     let { fullName, size, ...toppingsSelection } = form;
-    let toppings = []
+    let toppings = [];
     for (let key in toppingsSelection) {
-      if (toppingsSelection[key]) 
-        toppings.push(key)
-      
+      if (toppingsSelection[key]) toppings.push(key);
     }
-    let requestBody = {
-      fullName,
-      size,
-      toppings
-    };
+    let requestBody = { fullName, size, toppings };
     createOrder(requestBody)
     .unwrap()
     .then(() => {
-    dispatch({ type: 'RESET_FORM' })
+     dispatch({ type: 'RESET_FORM' });
   })
-  .catch(() => {})
+  .catch(() => {});
 };
 
   return (
